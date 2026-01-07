@@ -3,112 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Cricket Streaming - IPL Mock Auction</title>
-    <!-- Video.js CSS -->
-    <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet"/>
+    <title>Modern Sports Hub</title>
     <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent: #00d4ff;
+            --danger: #ff4d4d;
+            --success: #00ff88;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #4a4a4a, #202020);
-            color: #ffffff;
-            text-align: center;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
 
-        h1 {
-            color: #ffcc00;
-            font-size: 3em;
-            margin-top: 20px;
-        }
-
-        h2 {
-            color: #ffcc00;
-            font-size: 1.8em;
+        /* --- Header & Nav --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-        }
-
-        .video-container {
-            max-width: 850px;
-            margin: auto;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            background-color: #333333;
-            padding: 15px;
-        }
-
-        .video-js {
-            width: 100%;
-            height: 450px;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #ffcc00;
-            color: #121212;
-            padding: 12px 25px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 25px;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #e6b800;
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 1em;
-            color: #cccccc;
             padding-bottom: 20px;
+            border-bottom: 1px solid #333;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2.5em;
-            }
+        h1 { margin: 0; font-size: 1.5rem; }
+        .live-indicator { color: var(--danger); font-weight: bold; animation: pulse 1.5s infinite; }
 
-            .video-js {
-                height: 300px;
-            }
-
-            .button {
-                padding: 10px 20px;
-            }
+        .nav-chips {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
         }
+
+        .chip {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .chip.active {
+            background: var(--accent);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--accent);
+        }
+
+        /* --- Layout Grid --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* --- Sections --- */
+        .section-title {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-2px); border-color: #444; }
+
+        /* Score Card Specifics */
+        .match-header { font-size: 0.8rem; color: var(--text-secondary); display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .team-row { display: flex; justify-content: space-between; align-items: center; margin: 5px 0; font-size: 1.1rem; }
+        .score { font-weight: bold; color: var(--accent); }
+        .match-status { font-size: 0.8rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid #333; color: var(--success); }
+
+        /* News Card Specifics */
+        .news-image { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #333; }
+        .news-headline { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; line-height: 1.4; }
+        .news-meta { font-size: 0.8rem; color: var(--text-secondary); }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .loading { text-align: center; color: var(--text-secondary); padding: 20px; }
     </style>
 </head>
 <body>
 
-    <h1> IPL Mock Auction  </h1>
-    <h2> Live Streaming </h2>
-
-    <div class="video-container">
-        <video id="live-stream" class="video-js vjs-default-skin" controls preload="auto" autoplay muted data-setup="{}">
-            <source src="https://prod-sports-eng-cf.jiocinema.com/hls/live/2112592/uhd_akamai_ctv_avc_eng_mock_auction_231124/master.m3u8" type="application/x-mpegURL">
-            Your browser does not support HTML5 video.
-        </video>
+    <div class="header">
+        <h1>⚡ Sports<span style="color:var(--accent)">Hub</span></h1>
+        <span class="live-indicator">● LIVE</span>
     </div>
 
-    <p>Join our Telegram channel for live updates:</p>
-    <a href="https://t.me/+NFoX453eVVI4N2M1" class="button" target="_blank">Join Now</a>
+    <div class="nav-chips" id="sportNav">
+        <button class="chip active" onclick="loadSport('cricket')">Cricket</button>
+        <button class="chip" onclick="loadSport('soccer')">Football</button>
+        <button class="chip" onclick="loadSport('basketball')">Basketball</button>
+        <button class="chip" onclick="loadSport('tennis')">Tennis</button>
+    </div>
 
-    <footer>
-        <p>&copy; 2024 FlickXDrive. All rights reserved.</p>
-    </footer>
+    <div class="dashboard-grid">
+        
+        <div>
+            <div class="section-title">Match Center</div>
+            <div id="scores-container">
+                <div class="loading">Loading scores...</div>
+            </div>
+        </div>
 
-    <!-- Video.js JS -->
-    <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
+        <div>
+            <div class="section-title">Latest News</div>
+            <div id="news-container">
+                <div class="loading">Loading news...</div>
+            </div>
+        </div>
+
+    </div>
+
     <script>
-        var player = videojs('live-stream');
-        player.ready(function() {
-            player.play(); // Autoplay on load
-        });
-    </script>
+        // Configuration for the ESPN Endpoints
+        // We use these "hidden" endpoints to get real data without a key
+        const SPORTS_CONFIG = {
+            cricket: {
+                scores: 'https://site.api.espn.com/apis/site/v2/sports/cricket/score/events',
+                news: 'https://site.api.espn.com/apis/site/v2/sports/cricket/news'
+            },
+            soccer: {
+                // "soccer" in ESPN is often under "soccer/eng.1" for Premier League, or just "soccer" for general
+                scores: 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard',
+                news: 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/news'
+            },
+            basketball: {
+                scores: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
+                news: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/news'
+            },
+            tennis: {
+                scores: 'https://site.api.espn.com/apis/site/v2/sports/tennis/atp/scoreboard',
+                news: 'https://site.api.espn.com/apis/site/v2/sports/tennis/atp/news'
+            }
+        };
 
+        let currentSport = 'cricket';
+
+        // 1. Master function to load everything
+        async function loadSport(sport) {
+            currentSport = sport;
+            
+            // Update UI Chips
+            document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show loading state
+            document.getElementById('scores-container').innerHTML = '<div class="loading">Updating Scores...</div>';
+            document.getElementById('news-container').innerHTML = '<div class="loading">Updating News...</div>';
+
+            // Fetch Data
+            fetchScores(sport);
+            fetchNews(sport);
+        }
+
+        // 2. Fetch Scores
+        async function fetchScores(sport) {
+            const container = document.getElementById('scores-container');
+            try {
+                const response = await fetch(SPORTS_CONFIG[sport].scores);
+                const data = await response.json();
+                
+                container.innerHTML = ''; // Clear loading
+                
+                // Decide where the events are hidden (ESPN structure varies slightly)
+                const events = data.events || [];
+
+                if(events.length === 0) {
+                    container.innerHTML = '<div class="card">No live matches at the moment.</div>';
+                    return;
+                }
+
+                events.slice(0, 10).forEach(match => {
+                    // Extract data carefully
+                    const competition = match.season?.slug || "Match";
+                    const status = match.status?.type?.detail || "Scheduled";
+                    const team1 = match.competitions[0].competitors[0];
+                    const team2 = match.competitions[0].competitors[1];
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="match-header">
+                            <span>${match.name}</span>
+                            <span>${match.date.substring(0,10)}</span>
+                        </div>
+                        <div class="team-row">
+                            <span>${team1.team.displayName}</span>
+                            <span class="score">${team1.score || '-'}</span>
+                        </div>
+                        <div class="team-row">
+                            <span>${team2.team.displayName}</span>
+                            <span class="score">${team2.score || '-'}</span>
+                        </div>
+                        <div class="match-status">
+                            ${status}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                container.innerHTML = '<div class="card" style="color:red">Failed to load scores.</div>';
+                console.error(error);
+            }
+        }
+
+        // 3. Fetch News
+        async function fetchNews(sport) {
+            const container = document.getElementById('news-container');
+            try {
+                const response = await fetch(SPORTS_CONFIG[sport].news);
+                const data = await response.json();
+                
+                container.innerHTML = '';
+                
+                const articles = data.articles || [];
+
+                articles.slice(0, 8).forEach(article => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    
+                    // Some articles have images, some don't. We handle that:
+                    const imageHTML = article.images.length > 0 
+                        ? `<img src="${article.images[0].url}" class="news-image" alt="News">` 
+                        : '';
+
+                    card.innerHTML = `
+                        ${imageHTML}
+                        <div class="news-headline">${article.headline}</div>
+                        <div class="news-meta">${article.description || ''}</div>
+                        <div class="news-meta" style="margin-top:10px; color:var(--accent)">${article.published || 'Just now'}</div>
+                    `;
+                    
+                    // Make the whole card clickable
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => window.open(article.links.web.href, '_blank');
+                    
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                container.innerHTML = '<div class="card">No news available.</div>';
+            }
+        }
+
+        // Initial Load
+        // We manually trigger the click on the first button to start
+        document.querySelector('.chip.active').click();
+
+    </script>
 </body>
 </html>
