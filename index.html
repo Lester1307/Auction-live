@@ -4,420 +4,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinemax | Global Intelligence Hub</title>
-    <!-- Stable Production CDNs -->
+    <title>Cinemax Intelligence</title>
+    <!-- Essential CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #020617; 
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        /* Deep Cinematic Aurora Background */
-        .aurora-container {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%);
-            overflow: hidden;
-        }
-
-        .aurora-glow {
-            position: absolute;
-            width: 800px;
-            height: 800px;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.15;
-            pointer-events: none;
-            animation: moveAround 25s infinite alternate ease-in-out;
-        }
-        .glow-1 { background: #fbbf24; top: -10%; left: -10%; }
-        .glow-2 { background: #8b5cf6; bottom: -10%; right: -10%; animation-delay: -5s; }
-        .glow-3 { background: #3b82f6; top: 40%; left: 30%; animation-delay: -10s; }
-
-        @keyframes moveAround {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(15%, 15%) scale(1.1); }
-        }
-
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .interactive-card:hover {
-            border-color: rgba(251, 191, 36, 0.4);
-            background: rgba(30, 41, 59, 0.6);
-            transform: translateY(-4px);
-        }
-
-        .custom-dropdown {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1.25rem center;
-            background-size: 1.25rem;
-        }
-
-        .chart-box { position: relative; height: 320px; width: 100%; transition: opacity 0.3s; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .aurora { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .blob { position: absolute; width: 500px; height: 500px; filter: blur(100px); opacity: 0.15; border-radius: 50%; animation: move 20s infinite alternate; }
+        .blob-1 { background: #fbbf24; top: -10%; left: -5%; }
+        .blob-2 { background: #8b5cf6; bottom: -10%; right: -5%; animation-delay: -5s; }
+        @keyframes move { from { transform: translate(0,0) scale(1); } to { transform: translate(10%, 10%) scale(1.2); } }
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
-    <!-- Background Elements -->
-    <div class="aurora-container">
-        <div class="aurora-glow glow-1"></div>
-        <div class="aurora-glow glow-2"></div>
-        <div class="aurora-glow glow-3"></div>
+    <div class="aurora">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
     </div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 glass-panel border-r border-white/5 transition-transform -translate-x-full lg:translate-x-0">
-        <div class="flex flex-col h-full p-8">
-            <div class="flex items-center gap-3 mb-12">
-                <div class="bg-amber-400 p-2.5 rounded-2xl shadow-lg shadow-amber-400/20">
-                    <i data-lucide="clapperboard" class="text-slate-900 w-6 h-6"></i>
-                </div>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 glass border-r border-white/5 transition-transform -translate-x-full lg:translate-x-0">
+        <div class="flex flex-col h-full p-6">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="bg-amber-400 p-2 rounded-xl"><i data-lucide="clapperboard" class="text-slate-900 w-6 h-6"></i></div>
                 <h1 class="text-2xl font-black tracking-tighter">CINEMAX</h1>
             </div>
-
-            <nav class="flex-1 space-y-2">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-4 mb-4">Core Analytics</p>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-amber-400 text-slate-900 font-bold shadow-xl shadow-amber-400/10">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-                </a>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 hover:text-white transition-all">
-                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Performance
-                </a>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 hover:text-white transition-all">
-                    <i data-lucide="star" class="w-5 h-5"></i> Reviews
-                </a>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 hover:text-white transition-all">
-                    <i data-lucide="users" class="w-5 h-5"></i> Community
-                </a>
+            <nav class="flex-1 space-y-2 text-slate-400 font-semibold">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-400/10 text-amber-400 border border-amber-400/20"><i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5"><i data-lucide="bar-chart-2" class="w-5 h-5"></i> Insights</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5"><i data-lucide="star" class="w-5 h-5"></i> Reviews</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5"><i data-lucide="users" class="w-5 h-5"></i> Audience</a>
             </nav>
-
-            <div class="mt-auto pt-8 border-t border-white/5">
-                <div class="flex items-center gap-3 mb-4">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=fbbf24&color=000" class="w-10 h-10 rounded-xl">
-                    <div>
-                        <p class="text-sm font-bold">Admin Hub</p>
-                        <p class="text-[10px] text-amber-400 font-black uppercase">System Verified</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </aside>
 
-    <!-- Main View -->
-    <main class="flex-1 lg:ml-72 p-4 md:p-10">
-        
-        <!-- Navbar -->
-        <header class="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-12">
-            <div class="flex items-center gap-4">
-                <button id="menuToggle" class="lg:hidden p-3 glass-panel rounded-2xl text-amber-400">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-black tracking-tight">Executive <span class="text-amber-400">Insight</span></h2>
-                    <p class="text-slate-500 font-medium">Monitoring platform health for <span id="period-text" class="text-white font-bold underline decoration-amber-400">Monthly</span> report.</p>
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 p-4 md:p-8">
+        <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+            <div>
+                <div class="flex items-center gap-3">
+                    <button id="menuBtn" class="lg:hidden p-2 glass rounded-lg"><i data-lucide="menu" class="w-6 h-6 text-amber-400"></i></button>
+                    <h2 class="text-3xl font-extrabold tracking-tight">Executive <span class="text-amber-400">Panel</span></h2>
                 </div>
+                <p class="text-slate-500 mt-1">Status: <span class="text-emerald-400">Live Syncing</span> • <span id="currentPeriodLabel" class="text-white">Monthly</span></p>
             </div>
-            
-            <div class="flex flex-wrap items-center gap-4">
-                <select id="timeRangeSelector" class="custom-dropdown min-w-[220px] glass-panel bg-slate-900/60 text-white text-sm font-bold px-6 py-4 rounded-2xl outline-none cursor-pointer border border-white/5 hover:border-amber-400 transition-all">
+            <div class="flex items-center gap-4">
+                <select id="timeSwitcher" class="min-w-[200px] glass bg-slate-900/50 text-white font-bold px-6 py-4 rounded-2xl outline-none cursor-pointer border border-white/10 hover:border-amber-400 transition-all">
                     <option value="weekly">Weekly Pulse</option>
-                    <option value="biweekly">Bi-Weekly Overview</option>
-                    <option value="monthly" selected>Monthly Analysis</option>
+                    <option value="biweekly">Bi-Weekly Split</option>
+                    <option value="monthly" selected>Monthly Report</option>
                     <option value="yearly">Yearly Trajectory</option>
                 </select>
-                <button class="bg-white text-slate-950 font-black px-8 py-4 rounded-2xl text-xs uppercase tracking-widest hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/5">
-                    Sync Intelligence
-                </button>
+                <button onclick="window.location.reload()" class="bg-white text-slate-900 font-bold px-6 py-4 rounded-2xl hover:bg-amber-400 transition-all text-sm">RELOAD</button>
             </div>
         </header>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
-            <!-- Stat 1 -->
-            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-400"><i data-lucide="users" class="w-6 h-6"></i></div>
-                    <div id="badge-users" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Global Reach</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-users">0</h3>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Active Users</p>
+                <h3 class="text-3xl font-black text-white" id="stat-users">0</h3>
+                <div id="trend-users" class="mt-2 text-[10px] font-bold"></div>
             </div>
-            <!-- Stat 2 -->
-            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-purple-500/10 rounded-2xl text-purple-400"><i data-lucide="clapperboard" class="w-6 h-6"></i></div>
-                    <div id="badge-stream" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Minutes Streamed</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-stream">0</h3>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Watch Time</p>
+                <h3 class="text-3xl font-black text-white" id="stat-stream">0</h3>
+                <div id="trend-stream" class="mt-2 text-[10px] font-bold"></div>
             </div>
-            <!-- Stat 3 -->
-            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-amber-500/10 rounded-2xl text-amber-400"><i data-lucide="star" class="w-6 h-6"></i></div>
-                    <div id="badge-rating" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Avg Sentiment</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-rating">0</h3>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Avg Score</p>
+                <h3 class="text-3xl font-black text-white" id="stat-rating">0.0</h3>
+                <div id="trend-rating" class="mt-2 text-[10px] font-bold"></div>
             </div>
-            <!-- Stat 4 -->
-            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-emerald-500/10 rounded-2xl text-emerald-400"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
-                    <div id="badge-rev" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Est. Revenue</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-rev">$0</h3>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Ad Revenue</p>
+                <h3 class="text-3xl font-black text-white" id="stat-rev">$0</h3>
+                <div id="trend-rev" class="mt-2 text-[10px] font-bold"></div>
             </div>
         </div>
 
-        <!-- Charts Grid -->
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12">
-            
-            <div class="xl:col-span-2 glass-panel p-10 rounded-[3rem]">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-                    <div>
-                        <h4 class="text-2xl font-black">Engagement Velocity</h4>
-                        <p class="text-sm text-slate-500 font-medium">Tracking platform interactions vs time</p>
-                    </div>
-                    <div class="flex items-center gap-6">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50"></span>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Engagement</span>
-                        </div>
-                    </div>
+        <!-- Main Graph -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <div class="xl:col-span-2 glass p-8 rounded-[2rem]">
+                <div class="flex justify-between items-center mb-6">
+                    <h4 class="text-xl font-bold">Performance Matrix</h4>
+                    <span id="chart-type-badge" class="text-[10px] font-black uppercase bg-amber-400/20 text-amber-400 px-3 py-1 rounded-full">Line Graph</span>
                 </div>
-                <div class="chart-box">
+                <div class="chart-container">
                     <canvas id="mainChart"></canvas>
                 </div>
             </div>
-
-            <div class="glass-panel p-10 rounded-[3rem]">
-                <h4 class="text-2xl font-black mb-1">Genre Mastery</h4>
-                <p class="text-sm text-slate-500 font-medium mb-10">Reach by category</p>
-                <div class="h-64 flex items-center justify-center">
-                    <canvas id="doughnutChart"></canvas>
-                </div>
-                <div id="genreLegend" class="grid grid-cols-2 gap-4 mt-10">
-                    <!-- Dynamic Legend -->
-                </div>
-            </div>
-
-        </div>
-
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            <!-- Radar Insight -->
-            <div class="glass-panel p-10 rounded-[3rem]">
-                <h4 class="text-2xl font-black mb-2">Content Quality Radar</h4>
-                <p class="text-sm text-slate-500 font-medium mb-10">Weighted analysis across 5 vectors</p>
-                <div class="h-72">
-                    <canvas id="radarChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Movies List -->
-            <div class="glass-panel p-10 rounded-[3rem]">
-                <div class="flex justify-between items-center mb-10">
-                    <h4 class="text-2xl font-black">Trending Catalog</h4>
-                    <button class="text-amber-400 font-bold text-xs uppercase tracking-widest">Full Library</button>
-                </div>
-                <div id="movieList" class="space-y-4">
-                    <!-- Dynamic Movies -->
-                </div>
+            <div class="glass p-8 rounded-[2rem]">
+                <h4 class="text-xl font-bold mb-6">Top Trending</h4>
+                <div id="movieList" class="space-y-4"></div>
             </div>
         </div>
     </main>
 
     <script>
-        // MASTER DATA OBJECT - All data lives here for production stability
-        const DASHBOARD_DATA = {
+        // DATA OBJECT
+        const DATA = {
             weekly: {
                 label: "Weekly Pulse",
-                stats: { users: 8420, stream: 124500, rating: 4.8, rev: 3150 },
-                line: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    data: [120, 150, 110, 240, 320, 480, 410],
-                    style: { tension: 0 } // Jagged style for weekly
-                },
-                genres: [45, 20, 20, 15],
-                radar: [80, 95, 75, 85, 90],
-                movies: [
-                    { title: "Fallout", score: 9.2, tag: "Action", reach: "12k" },
-                    { title: "The Bear", score: 9.4, tag: "Series", reach: "8k" }
-                ]
+                stats: { users: 1420, stream: 48200, rating: 4.8, rev: 3100 },
+                line: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], data: [80, 150, 110, 240, 310, 420, 390], type: 'bar' },
+                movies: [{ n: "Fallout", s: 9.4 }, { n: "Ripley", s: 8.7 }, { n: "Sugar", s: 7.6 }]
             },
             biweekly: {
                 label: "Bi-Weekly Split",
-                stats: { users: 16500, stream: 284000, rating: 4.7, rev: 6800 },
-                line: {
-                    labels: ['W1-M', 'W1-F', 'W2-M', 'W2-F'],
-                    data: [420, 580, 510, 890],
-                    style: { tension: 0.2, borderDash: [5, 5] } // Dashed style
-                },
-                genres: [40, 25, 20, 15],
-                radar: [85, 80, 80, 90, 85],
-                movies: [
-                    { title: "Dune 2", score: 9.6, tag: "Sci-Fi", reach: "42k" },
-                    { title: "Monkey Man", score: 8.5, tag: "Action", reach: "14k" }
-                ]
+                stats: { users: 3200, stream: 98000, rating: 4.7, rev: 6400 },
+                line: { labels: ['W1-M', 'W1-F', 'W2-M', 'W2-F'], data: [450, 820, 510, 940], type: 'line', dash: [5,5] },
+                movies: [{ n: "Dune 2", s: 9.7 }, { n: "Civil War", s: 8.2 }, { n: "Monkey Man", s: 8.5 }]
             },
             monthly: {
-                label: "Monthly Analysis",
-                stats: { users: 48200, stream: 1240000, rating: 4.6, rev: 42150 },
-                line: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    data: [1200, 1800, 1400, 2900],
-                    style: { tension: 0.5 } // Smooth style
-                },
-                genres: [35, 30, 20, 15],
-                radar: [95, 90, 95, 80, 75],
-                movies: [
-                    { title: "Oppenheimer", score: 9.8, tag: "Drama", reach: "152k" },
-                    { title: "The Boys S4", score: 9.1, tag: "Action", reach: "110k" }
-                ]
+                label: "Monthly Report",
+                stats: { users: 48500, stream: 1240000, rating: 4.6, rev: 42150 },
+                line: { labels: ['W1', 'W2', 'W3', 'W4'], data: [1200, 1800, 1400, 2900], type: 'line', tension: 0.4 },
+                movies: [{ n: "Oppenheimer", s: 9.8 }, { n: "The Bear", s: 9.5 }, { n: "Shogun", s: 9.3 }]
             },
             yearly: {
-                label: "Annual Trajectory",
-                stats: { users: 540000, stream: 18400000, rating: 4.8, rev: 1420000 },
-                line: {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                    data: [12000, 24000, 18500, 34000],
-                    style: { tension: 0, stepped: true } // Stepped style
-                },
-                genres: [30, 25, 25, 20],
-                radar: [85, 85, 85, 95, 90],
-                movies: [
-                    { title: "Avatar 2", score: 8.8, tag: "Sci-Fi", reach: "1.4M" },
-                    { title: "Spider-Verse", score: 9.5, tag: "Animation", reach: "940k" }
-                ]
+                label: "Yearly Trajectory",
+                stats: { users: 540000, stream: 14500000, rating: 4.9, rev: 1420000 },
+                line: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], data: [12000, 24000, 18000, 32000], type: 'line', stepped: true },
+                movies: [{ n: "Avatar 2", s: 8.9 }, { n: "Succession", s: 9.9 }, { n: "Spider-Verse", s: 9.4 }]
             }
         };
 
-        let currentCharts = {};
-        let benchmark = DASHBOARD_DATA.monthly.stats;
+        let activeChart = null;
+        let prevStats = DATA.monthly.stats;
 
-        // Initialize App
-        function initApp() {
-            lucide.createIcons();
-            setupCharts();
-            updateDashboard('monthly'); // Run initial state immediately
-        }
+        function updateUI(range) {
+            const d = DATA[range];
+            document.getElementById('currentPeriodLabel').innerText = d.label;
 
-        function setupCharts() {
-            Chart.defaults.color = '#94a3b8';
-            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            // Update Numbers
+            const count = (id, val, fix=0) => {
+                let v = val >= 1000000 ? (val/1000000).toFixed(1)+'M' : (val >= 1000 ? (val/1000).toFixed(1)+'k' : val.toFixed(fix));
+                document.getElementById(id).innerText = (id==='stat-rev' ? '$' : '') + v;
+            };
+            count('stat-users', d.stats.users);
+            count('stat-stream', d.stats.stream);
+            count('stat-rating', d.stats.rating, 1);
+            count('stat-rev', d.stats.rev);
 
-            // Line Chart
-            currentCharts.line = new Chart(document.getElementById('mainChart').getContext('2d'), {
-                type: 'line',
+            // Update Trends
+            const trend = (id, cur, old) => {
+                const up = cur >= old;
+                const el = document.getElementById(id);
+                el.className = `mt-2 text-[10px] font-bold ${up ? 'text-emerald-400' : 'text-red-400'}`;
+                el.innerText = (up ? '▲ ' : '▼ ') + (old === 0 ? 0 : Math.abs(((cur-old)/old)*100).toFixed(0)) + '% from last period';
+            };
+            trend('trend-users', d.stats.users, prevStats.users);
+            trend('trend-stream', d.stats.stream, prevStats.stream);
+            trend('trend-rating', d.stats.rating, prevStats.rating);
+            trend('trend-rev', d.stats.rev, prevStats.rev);
+            prevStats = d.stats;
+
+            // Update Graph Style
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            if(activeChart) activeChart.destroy();
+            
+            document.getElementById('chart-type-badge').innerText = d.line.type + (d.line.stepped ? ' (stepped)' : '');
+
+            activeChart = new Chart(ctx, {
+                type: d.line.type,
                 data: {
-                    labels: [],
+                    labels: d.line.labels,
                     datasets: [{
-                        data: [],
+                        data: d.line.data,
                         borderColor: '#fbbf24',
-                        backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                        backgroundColor: d.line.type === 'bar' ? '#fbbf24' : 'rgba(251, 191, 36, 0.1)',
                         fill: true,
-                        borderWidth: 4,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#fbbf24'
+                        tension: d.line.tension || 0,
+                        stepped: d.line.stepped || false,
+                        borderDash: d.line.dash || [],
+                        borderWidth: 3
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } },
-                        x: { grid: { display: false }, border: { display: false } }
+                    scales: { 
+                        x: { grid: { display: false }, border: { display: false } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false }, ticks: { display: false } }
                     }
                 }
             });
 
-            // Doughnut Chart
-            currentCharts.doughnut = new Chart(document.getElementById('doughnutChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Action', 'Drama', 'Sci-Fi', 'Comedy'],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: ['#fbbf24', '#8b5cf6', '#3b82f6', '#10b981'],
-                        borderWidth: 0,
-                        hoverOffset: 15
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '80%',
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // Radar Chart
-            currentCharts.radar = new Chart(document.getElementById('radarChart').getContext('2d'), {
-                type: 'radar',
-                data: {
-                    labels: ['Visuals', 'Story', 'Cast', 'Audio', 'Directing'],
-                    datasets: [{
-                        data: [],
-                        borderColor: '#fbbf24',
-                        backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                        borderWidth: 2,
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(255,255,255,0.05)' },
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            pointLabels: { color: '#94a3b8', font: { weight: 'bold' } },
-                            ticks: { display: false }
-                        }
-                    }
-                }
-            });
+            // Update Movies
+            document.getElementById('movieList').innerHTML = d.movies.map(m => `
+                <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-400/20 rounded-lg flex items-center justify-center text-amber-400 font-bold">${m.n.charAt(0)}</div>
+                        <p class="font-bold text-sm">${m.n}</p>
+                    </div>
+                    <span class="text-amber-400 font-black">${m.s}</span>
+                </div>
+            `).join('');
         }
 
-        function formatValue(v) {
-            if (v >= 1000000) return (v / 1000000).toFixed(1) + 'M';
-            if (v >= 1000) return (v / 1000).toFixed(1) + 'k';
-            return v;
-        }
+        // FAIL-SAFE EXECUTION: Run immediately without waiting
+        (function() {
+            try {
+                lucide.createIcons();
+                updateUI('monthly');
+                
+                document.getElementById('timeSwitcher').addEventListener('change', (e) => {
+                    updateUI(e.target.value);
+                });
 
-        function animateNumber(id, end, prefix = '', isFloat = false) {
-            const el = document.getElementById(id);
-            let start = 0;
-            const duration = 1200;
-            const ts = performance.now();
-            function step(now) {
-                const p = Math.min((now - ts) / duration, 1);
-                const cur = p * end;
-                el.innerText = prefix + (isFloat ? cur.toFixed(1) : formatValue(Math.floor(cur)));
-                if (p < 1) requestAnimationFrame(step);
+                document.getElementById('menuBtn').addEventListener('click', (e) => {
+                    document.getElementById('sidebar').classList.toggle('-translate-x-full');
+                    e.stopPropagation();
+                });
+
+                document.body.addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.add('-translate-x-full');
+                });
+            } catch (err) {
+                console.error("Dashboard failed to init:", err);
             }
-            requestAnimationFrame(step);
-        }
+        })();
+    </script>
+</body>
+</html>
 
-        function updateTrends(id, current, prev) {
-            const el = document.getElementById(id);
-            const isUp = current >= prev;
-            const pct = prev === 0 ? 0 : Math.abs(((curren
+```
