@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinemax | Adaptive Analytics</title>
+    <title>Cinemax | Global Intelligence Hub</title>
+    <!-- Stable Production CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
@@ -17,318 +19,321 @@
             overflow-x: hidden;
         }
 
-        /* Dynamic Aurora Glows */
-        .aurora-bg {
+        /* Deep Cinematic Aurora Background */
+        .aurora-container {
             position: fixed;
             inset: 0;
             z-index: -1;
+            background: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%);
             overflow: hidden;
-            pointer-events: none;
         }
-        .blob {
+
+        .aurora-glow {
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
+            width: 800px;
+            height: 800px;
             border-radius: 50%;
-            filter: blur(80px);
-            animation: rotate 30s infinite linear;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            animation: moveAround 25s infinite alternate ease-in-out;
         }
-        .blob-2 { background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); top: 40%; left: 50%; animation-duration: 40s; }
-        .blob-3 { background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); bottom: 0; right: 0; }
+        .glow-1 { background: #fbbf24; top: -10%; left: -10%; }
+        .glow-2 { background: #8b5cf6; bottom: -10%; right: -10%; animation-delay: -5s; }
+        .glow-3 { background: #3b82f6; top: 40%; left: 30%; animation-delay: -10s; }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg) translate(50px) rotate(0deg); }
-            to { transform: rotate(360deg) translate(50px) rotate(-360deg); }
+        @keyframes moveAround {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(15%, 15%) scale(1.1); }
         }
 
-        .glass {
+        .glass-panel {
             background: rgba(15, 23, 42, 0.5);
             backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
-        .stat-card:hover {
+        .interactive-card:hover {
             border-color: rgba(251, 191, 36, 0.4);
             background: rgba(30, 41, 59, 0.6);
-            transform: scale(1.02);
+            transform: translateY(-4px);
         }
 
-        .custom-select {
+        .custom-dropdown {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 1.2rem center;
-            background-size: 1.2rem;
+            background-position: right 1.25rem center;
+            background-size: 1.25rem;
         }
 
-        .chart-wrapper { height: 320px; width: 100%; transition: all 0.5s ease; }
+        .chart-box { position: relative; height: 320px; width: 100%; transition: opacity 0.3s; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
-    <div class="aurora-bg">
-        <div class="blob"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+    <!-- Background Elements -->
+    <div class="aurora-container">
+        <div class="aurora-glow glow-1"></div>
+        <div class="aurora-glow glow-2"></div>
+        <div class="aurora-glow glow-3"></div>
     </div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 glass border-r border-white/5 transition-transform -translate-x-full lg:translate-x-0">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 glass-panel border-r border-white/5 transition-transform -translate-x-full lg:translate-x-0">
         <div class="flex flex-col h-full p-8">
             <div class="flex items-center gap-3 mb-12">
-                <div class="bg-amber-400 p-2.5 rounded-2xl shadow-[0_0_20px_rgba(251,191,36,0.3)]">
-                    <i data-lucide="monitor-play" class="text-slate-950 w-6 h-6"></i>
+                <div class="bg-amber-400 p-2.5 rounded-2xl shadow-lg shadow-amber-400/20">
+                    <i data-lucide="clapperboard" class="text-slate-900 w-6 h-6"></i>
                 </div>
-                <h1 class="text-2xl font-black tracking-tighter italic">CINEMAX</h1>
+                <h1 class="text-2xl font-black tracking-tighter">CINEMAX</h1>
             </div>
 
-            <nav class="flex-1 space-y-3">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-4 mb-4">Core Systems</p>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-amber-400 text-slate-950 font-bold shadow-lg shadow-amber-400/20">
+            <nav class="flex-1 space-y-2">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-4 mb-4">Core Analytics</p>
+                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-amber-400 text-slate-900 font-bold shadow-xl shadow-amber-400/10">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                 </a>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all">
-                    <i data-lucide="bar-chart-big" class="w-5 h-5"></i> Insights
+                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 hover:text-white transition-all">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Performance
                 </a>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all">
+                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 hover:text-white transition-all">
                     <i data-lucide="star" class="w-5 h-5"></i> Reviews
                 </a>
-                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all">
-                    <i data-lucide="users" class="w-5 h-5"></i> Audience
+                <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 hover:text-white transition-all">
+                    <i data-lucide="users" class="w-5 h-5"></i> Community
                 </a>
             </nav>
 
-            <div class="mt-auto p-6 rounded-3xl bg-gradient-to-br from-amber-400/10 to-transparent border border-amber-400/10">
+            <div class="mt-auto pt-8 border-t border-white/5">
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="https://ui-avatars.com/api/?name=Cinemax+Admin&background=fbbf24&color=000" class="w-10 h-10 rounded-xl">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=fbbf24&color=000" class="w-10 h-10 rounded-xl">
                     <div>
                         <p class="text-sm font-bold">Admin Hub</p>
-                        <p class="text-[10px] text-amber-400/60 font-black uppercase">Verified</p>
+                        <p class="text-[10px] text-amber-400 font-black uppercase">System Verified</p>
                     </div>
                 </div>
-                <button class="w-full py-2.5 bg-white/5 rounded-xl text-xs font-bold hover:bg-white/10 transition-all">Logout</button>
             </div>
         </div>
     </aside>
 
-    <!-- Content -->
+    <!-- Main View -->
     <main class="flex-1 lg:ml-72 p-4 md:p-10">
         
         <!-- Navbar -->
         <header class="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-12">
             <div class="flex items-center gap-4">
-                <button id="mobileMenu" class="lg:hidden p-3 glass rounded-2xl text-amber-400">
+                <button id="menuToggle" class="lg:hidden p-3 glass-panel rounded-2xl text-amber-400">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
                 <div>
-                    <h2 class="text-4xl font-black tracking-tight">Intelligence <span class="text-amber-400 underline decoration-amber-400/30">Portal</span></h2>
-                    <p class="text-slate-500 font-medium">Platform state: <span class="text-emerald-400 font-bold" id="status-text">Active</span> — Showing <span class="text-white font-bold" id="range-label">Monthly</span></p>
+                    <h2 class="text-3xl md:text-4xl font-black tracking-tight">Executive <span class="text-amber-400">Insight</span></h2>
+                    <p class="text-slate-500 font-medium">Monitoring platform health for <span id="period-text" class="text-white font-bold underline decoration-amber-400">Monthly</span> report.</p>
                 </div>
             </div>
             
             <div class="flex flex-wrap items-center gap-4">
-                <div class="relative">
-                    <select id="timeSwitcher" class="custom-select min-w-[220px] glass bg-slate-900/60 text-white text-sm font-bold px-6 py-4 rounded-2xl outline-none cursor-pointer border border-white/5 hover:border-amber-400 transition-all">
-                        <option value="weekly">Weekly Pulse</option>
-                        <option value="biweekly">Bi-Weekly Overview</option>
-                        <option value="monthly" selected>Monthly Analysis</option>
-                        <option value="yearly">Yearly Trajectory</option>
-                    </select>
-                </div>
-                <button class="bg-white text-slate-950 font-black px-8 py-4 rounded-2xl text-xs uppercase tracking-widest hover:bg-amber-400 transition-all shadow-xl shadow-white/5">
-                    Sync Data
+                <select id="timeRangeSelector" class="custom-dropdown min-w-[220px] glass-panel bg-slate-900/60 text-white text-sm font-bold px-6 py-4 rounded-2xl outline-none cursor-pointer border border-white/5 hover:border-amber-400 transition-all">
+                    <option value="weekly">Weekly Pulse</option>
+                    <option value="biweekly">Bi-Weekly Overview</option>
+                    <option value="monthly" selected>Monthly Analysis</option>
+                    <option value="yearly">Yearly Trajectory</option>
+                </select>
+                <button class="bg-white text-slate-950 font-black px-8 py-4 rounded-2xl text-xs uppercase tracking-widest hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/5">
+                    Sync Intelligence
                 </button>
             </div>
         </header>
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
-            <div class="glass p-8 rounded-[2.5rem] stat-card transition-all duration-500">
+            <!-- Stat 1 -->
+            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
                 <div class="flex justify-between items-start mb-6">
                     <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-400"><i data-lucide="users" class="w-6 h-6"></i></div>
-                    <div id="t-users" class="px-2.5 py-1 rounded-full text-[10px] font-black"></div>
+                    <div id="badge-users" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
                 </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Active Users</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="v-users">0</h3>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Global Reach</p>
+                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-users">0</h3>
             </div>
-            <div class="glass p-8 rounded-[2.5rem] stat-card transition-all duration-500">
+            <!-- Stat 2 -->
+            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
                 <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-purple-500/10 rounded-2xl text-purple-400"><i data-lucide="activity" class="w-6 h-6"></i></div>
-                    <div id="t-stream" class="px-2.5 py-1 rounded-full text-[10px] font-black"></div>
+                    <div class="p-3 bg-purple-500/10 rounded-2xl text-purple-400"><i data-lucide="clapperboard" class="w-6 h-6"></i></div>
+                    <div id="badge-stream" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
                 </div>
                 <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Minutes Streamed</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="v-stream">0</h3>
+                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-stream">0</h3>
             </div>
-            <div class="glass p-8 rounded-[2.5rem] stat-card transition-all duration-500">
+            <!-- Stat 3 -->
+            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
                 <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-amber-500/10 rounded-2xl text-amber-400"><i data-lucide="award" class="w-6 h-6"></i></div>
-                    <div id="t-rating" class="px-2.5 py-1 rounded-full text-[10px] font-black"></div>
+                    <div class="p-3 bg-amber-500/10 rounded-2xl text-amber-400"><i data-lucide="star" class="w-6 h-6"></i></div>
+                    <div id="badge-rating" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
                 </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Avg. Score</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="v-rating">0</h3>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Avg Sentiment</p>
+                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-rating">0</h3>
             </div>
-            <div class="glass p-8 rounded-[2.5rem] stat-card transition-all duration-500">
+            <!-- Stat 4 -->
+            <div class="glass-panel p-8 rounded-[2.5rem] interactive-card transition-all duration-500">
                 <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-emerald-500/10 rounded-2xl text-emerald-400"><i data-lucide="zap" class="w-6 h-6"></i></div>
-                    <div id="t-rev" class="px-2.5 py-1 rounded-full text-[10px] font-black"></div>
+                    <div class="p-3 bg-emerald-500/10 rounded-2xl text-emerald-400"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
+                    <div id="badge-rev" class="px-2 py-1 rounded-lg text-[10px] font-black"></div>
                 </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Ad Revenue</p>
-                <h3 class="text-4xl font-black mt-2 tracking-tight" id="v-rev">$0</h3>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Est. Revenue</p>
+                <h3 class="text-4xl font-black mt-2 tracking-tight" id="val-rev">$0</h3>
             </div>
         </div>
 
-        <!-- Dynamic Visualization Section -->
+        <!-- Charts Grid -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12">
             
-            <div class="xl:col-span-2 glass p-10 rounded-[3rem]">
+            <div class="xl:col-span-2 glass-panel p-10 rounded-[3rem]">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                     <div>
                         <h4 class="text-2xl font-black">Engagement Velocity</h4>
-                        <p class="text-sm text-slate-500 font-medium">Dynamic graph style based on timeframe</p>
+                        <p class="text-sm text-slate-500 font-medium">Tracking platform interactions vs time</p>
                     </div>
-                    <div class="flex gap-4">
+                    <div class="flex items-center gap-6">
                         <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]"></span>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reviews</span>
+                            <span class="w-3 h-3 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50"></span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Engagement</span>
                         </div>
                     </div>
                 </div>
-                <div class="chart-wrapper">
+                <div class="chart-box">
                     <canvas id="mainChart"></canvas>
                 </div>
             </div>
 
-            <div class="glass p-10 rounded-[3rem]">
-                <h4 class="text-2xl font-black mb-2">Category Split</h4>
-                <p class="text-sm text-slate-500 font-medium mb-8">Content library reach</p>
+            <div class="glass-panel p-10 rounded-[3rem]">
+                <h4 class="text-2xl font-black mb-1">Genre Mastery</h4>
+                <p class="text-sm text-slate-500 font-medium mb-10">Reach by category</p>
                 <div class="h-64 flex items-center justify-center">
-                    <canvas id="polarChart"></canvas>
+                    <canvas id="doughnutChart"></canvas>
                 </div>
-                <div id="genre-legend" class="grid grid-cols-2 gap-4 mt-8">
-                    <!-- Legend dynamic -->
+                <div id="genreLegend" class="grid grid-cols-2 gap-4 mt-10">
+                    <!-- Dynamic Legend -->
                 </div>
             </div>
 
         </div>
 
-        <!-- Secondary Section -->
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            
-            <div class="glass p-10 rounded-[3rem]">
-                <h4 class="text-2xl font-black mb-2">Sentiment Matrix</h4>
-                <p class="text-sm text-slate-500 font-medium mb-10">Platform quality across 5 vectors</p>
-                <div class="h-64">
+            <!-- Radar Insight -->
+            <div class="glass-panel p-10 rounded-[3rem]">
+                <h4 class="text-2xl font-black mb-2">Content Quality Radar</h4>
+                <p class="text-sm text-slate-500 font-medium mb-10">Weighted analysis across 5 vectors</p>
+                <div class="h-72">
                     <canvas id="radarChart"></canvas>
                 </div>
             </div>
 
-            <div class="glass p-10 rounded-[3rem]">
+            <!-- Movies List -->
+            <div class="glass-panel p-10 rounded-[3rem]">
                 <div class="flex justify-between items-center mb-10">
-                    <h4 class="text-2xl font-black">Top Performers</h4>
-                    <button class="text-amber-400 font-bold text-xs uppercase tracking-widest hover:underline">Full Report</button>
+                    <h4 class="text-2xl font-black">Trending Catalog</h4>
+                    <button class="text-amber-400 font-bold text-xs uppercase tracking-widest">Full Library</button>
                 </div>
-                <div id="movie-grid" class="space-y-4">
-                    <!-- Dynamic List -->
+                <div id="movieList" class="space-y-4">
+                    <!-- Dynamic Movies -->
                 </div>
             </div>
-
         </div>
     </main>
 
     <script>
-        // Comprehensive Dataset with Styling Instructions
-        const configData = {
+        // MASTER DATA OBJECT - All data lives here for production stability
+        const DASHBOARD_DATA = {
             weekly: {
                 label: "Weekly Pulse",
-                stats: { users: 2420, stream: 84500, rating: 4.8, rev: 3150 },
+                stats: { users: 8420, stream: 124500, rating: 4.8, rev: 3150 },
                 line: {
                     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    data: [80, 150, 110, 240, 310, 420, 390],
-                    style: { tension: 0, stepped: false, borderDash: [] } // Jagged
+                    data: [120, 150, 110, 240, 320, 480, 410],
+                    style: { tension: 0 } // Jagged style for weekly
                 },
-                polar: [35, 25, 20, 20],
-                radar: [80, 95, 70, 85, 90],
+                genres: [45, 20, 20, 15],
+                radar: [80, 95, 75, 85, 90],
                 movies: [
-                    { title: "The Bear", score: 9.4, reach: "12.4k", tag: "Series" },
-                    { title: "Fallout", score: 9.2, reach: "8.1k", tag: "Action" }
+                    { title: "Fallout", score: 9.2, tag: "Action", reach: "12k" },
+                    { title: "The Bear", score: 9.4, tag: "Series", reach: "8k" }
                 ]
             },
             biweekly: {
-                label: "Bi-Weekly Overview",
-                stats: { users: 4850, stream: 162000, rating: 4.7, rev: 6800 },
+                label: "Bi-Weekly Split",
+                stats: { users: 16500, stream: 284000, rating: 4.7, rev: 6800 },
                 line: {
-                    labels: ['D1', 'D3', 'D5', 'D7', 'D9', 'D11', 'D14'],
-                    data: [250, 280, 420, 390, 560, 610, 580],
-                    style: { tension: 0.1, stepped: false, borderDash: [10, 5] } // Dashed
+                    labels: ['W1-M', 'W1-F', 'W2-M', 'W2-F'],
+                    data: [420, 580, 510, 890],
+                    style: { tension: 0.2, borderDash: [5, 5] } // Dashed style
                 },
-                polar: [30, 30, 20, 20],
-                radar: [75, 80, 85, 90, 85],
+                genres: [40, 25, 20, 15],
+                radar: [85, 80, 80, 90, 85],
                 movies: [
-                    { title: "Shogun", score: 9.6, reach: "24.5k", tag: "Drama" },
-                    { title: "Ripley", score: 8.8, reach: "18.2k", tag: "Thriller" }
+                    { title: "Dune 2", score: 9.6, tag: "Sci-Fi", reach: "42k" },
+                    { title: "Monkey Man", score: 8.5, tag: "Action", reach: "14k" }
                 ]
             },
             monthly: {
                 label: "Monthly Analysis",
-                stats: { users: 42800, stream: 845000, rating: 4.6, rev: 42150 },
+                stats: { users: 48200, stream: 1240000, rating: 4.6, rev: 42150 },
                 line: {
                     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    data: [1200, 1800, 1400, 2600],
-                    style: { tension: 0.5, stepped: false, borderDash: [] } // Smooth Bezier
+                    data: [1200, 1800, 1400, 2900],
+                    style: { tension: 0.5 } // Smooth style
                 },
-                polar: [40, 20, 25, 15],
-                radar: [90, 85, 95, 80, 85],
+                genres: [35, 30, 20, 15],
+                radar: [95, 90, 95, 80, 75],
                 movies: [
-                    { title: "Oppenheimer", score: 9.8, reach: "142k", tag: "Cinematic" },
-                    { title: "Dune: Part Two", score: 9.5, reach: "210k", tag: "Sci-Fi" }
+                    { title: "Oppenheimer", score: 9.8, tag: "Drama", reach: "152k" },
+                    { title: "The Boys S4", score: 9.1, tag: "Action", reach: "110k" }
                 ]
             },
             yearly: {
-                label: "Yearly Trajectory",
-                stats: { users: 510000, stream: 12000000, rating: 4.7, rev: 1420000 },
+                label: "Annual Trajectory",
+                stats: { users: 540000, stream: 18400000, rating: 4.8, rev: 1420000 },
                 line: {
                     labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                    data: [12000, 24000, 21000, 38000],
-                    style: { tension: 0, stepped: true, borderDash: [] } // Stepped Line
+                    data: [12000, 24000, 18500, 34000],
+                    style: { tension: 0, stepped: true } // Stepped style
                 },
-                polar: [25, 25, 30, 20],
-                radar: [85, 80, 85, 95, 90],
+                genres: [30, 25, 25, 20],
+                radar: [85, 85, 85, 95, 90],
                 movies: [
-                    { title: "Avatar 2", score: 8.8, reach: "1.4M", tag: "Global" },
-                    { title: "Spider-Verse", score: 9.4, reach: "840k", tag: "Animation" }
+                    { title: "Avatar 2", score: 8.8, tag: "Sci-Fi", reach: "1.4M" },
+                    { title: "Spider-Verse", score: 9.5, tag: "Animation", reach: "940k" }
                 ]
             }
         };
 
-        let charts = {};
-        let previousStats = configData.monthly.stats;
+        let currentCharts = {};
+        let benchmark = DASHBOARD_DATA.monthly.stats;
 
-        function init() {
+        // Initialize App
+        function initApp() {
             lucide.createIcons();
             setupCharts();
-            updateAll('monthly');
+            updateDashboard('monthly'); // Run initial state immediately
         }
 
         function setupCharts() {
-            Chart.defaults.color = '#64748b';
+            Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
 
-            // Main Line Chart
-            charts.line = new Chart(document.getElementById('mainChart'), {
+            // Line Chart
+            currentCharts.line = new Chart(document.getElementById('mainChart').getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: [],
                     datasets: [{
-                        label: 'Engagement',
                         data: [],
                         borderColor: '#fbbf24',
                         backgroundColor: 'rgba(251, 191, 36, 0.1)',
                         fill: true,
                         borderWidth: 4,
                         pointRadius: 4,
-                        pointHoverRadius: 8,
                         pointBackgroundColor: '#fbbf24'
                     }]
                 },
@@ -343,37 +348,31 @@
                 }
             });
 
-            // Polar Area Chart
-            charts.polar = new Chart(document.getElementById('polarChart'), {
-                type: 'polarArea',
+            // Doughnut Chart
+            currentCharts.doughnut = new Chart(document.getElementById('doughnutChart').getContext('2d'), {
+                type: 'doughnut',
                 data: {
                     labels: ['Action', 'Drama', 'Sci-Fi', 'Comedy'],
                     datasets: [{
                         data: [],
-                        backgroundColor: [
-                            'rgba(251, 191, 36, 0.6)',
-                            'rgba(139, 92, 246, 0.6)',
-                            'rgba(59, 130, 246, 0.6)',
-                            'rgba(16, 185, 129, 0.6)'
-                        ],
-                        borderWidth: 0
+                        backgroundColor: ['#fbbf24', '#8b5cf6', '#3b82f6', '#10b981'],
+                        borderWidth: 0,
+                        hoverOffset: 15
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        r: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { display: false } }
-                    }
+                    cutout: '80%',
+                    plugins: { legend: { display: false } }
                 }
             });
 
             // Radar Chart
-            charts.radar = new Chart(document.getElementById('radarChart'), {
+            currentCharts.radar = new Chart(document.getElementById('radarChart').getContext('2d'), {
                 type: 'radar',
                 data: {
-                    labels: ['Visuals', 'Story', 'Cast', 'Audio', 'Flow'],
+                    labels: ['Visuals', 'Story', 'Cast', 'Audio', 'Directing'],
                     datasets: [{
                         data: [],
                         borderColor: '#fbbf24',
@@ -398,25 +397,27 @@
             });
         }
 
-        function format(v) {
-            if (v >= 1000000) return (v/1000000).toFixed(1) + 'M';
-            if (v >= 1000) return (v/1000).toFixed(1) + 'k';
+        function formatValue(v) {
+            if (v >= 1000000) return (v / 1000000).toFixed(1) + 'M';
+            if (v >= 1000) return (v / 1000).toFixed(1) + 'k';
             return v;
         }
 
-        function countUp(id, end, prefix = '', isFloat = false) {
+        function animateNumber(id, end, prefix = '', isFloat = false) {
             const el = document.getElementById(id);
             let start = 0;
-            const duration = 1000;
+            const duration = 1200;
             const ts = performance.now();
             function step(now) {
                 const p = Math.min((now - ts) / duration, 1);
                 const cur = p * end;
-                el.innerText = prefix + (isFloat ? cur.toFixed(1) : format(Math.floor(cur)));
+                el.innerText = prefix + (isFloat ? cur.toFixed(1) : formatValue(Math.floor(cur)));
                 if (p < 1) requestAnimationFrame(step);
             }
             requestAnimationFrame(step);
         }
 
-        function setTrend(id, cur, prev) {
-            const el = document.
+        function updateTrends(id, current, prev) {
+            const el = document.getElementById(id);
+            const isUp = current >= prev;
+            const pct = prev === 0 ? 0 : Math.abs(((curren
